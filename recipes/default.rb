@@ -45,17 +45,17 @@ execute "load_spatial_ref_sys_sql" do
   action :run
 end
 
-execute "load_rtpostgis_sql" do
-  user "postgres"
-  command "psql -d #{node['postgis']['template_name']} -f `pg_config --sharedir`/contrib/#{node['postgis']['sql_folder']}/rtpostgis.sql"
-  only_if "psql -qAt --list | grep '^#{node['postgis']['template_name']}\|'", user: 'postgres'
-  action :run
-end
-
-execute "load_topology_sql" do
-  user "postgres"
-  command "psql -d #{node['postgis']['template_name']} -f `pg_config --sharedir`/contrib/#{node['postgis']['sql_folder']}/topology.sql"
-  only_if "psql -qAt --list | grep '^#{node['postgis']['template_name']}\|'", user: 'postgres'
-  action :run
-end
+# execute "load_rtpostgis_sql" do
+#   user "postgres"
+#   command "psql -d #{node['postgis']['template_name']} -f `pg_config --sharedir`/contrib/#{node['postgis']['sql_folder']}/rtpostgis.sql"
+#   only_if "psql -qAt --list | grep '^#{node['postgis']['template_name']}\|'", user: 'postgres'
+#   action :run
+# end
+# 
+# execute "load_topology_sql" do
+#   user "postgres"
+#   command "psql -d #{node['postgis']['template_name']} -f `pg_config --sharedir`/contrib/#{node['postgis']['sql_folder']}/topology.sql"
+#   only_if "psql -qAt --list | grep '^#{node['postgis']['template_name']}\|'", user: 'postgres'
+#   action :run
+# end
 
