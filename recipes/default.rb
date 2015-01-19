@@ -31,6 +31,20 @@ execute "create_postgis_template" do
   action :run
 end
 
+execute "lock_postgis_template" do
+  user "postgres"
+  command "psql -d #{node['postgis']['template_name']} -c \"UPDATE pg_database SET datistemplate=true WHERE datname='#{node['postgis']['template_name']}'\""
+  only_if "psql -qAt --list | grep '^#{node['postgis']['template_name']}\|'", user: 'postgres'
+  action :run
+end
+
+execute "load_plpgsql_language" do
+  user "postgres"
+  command "createlang plpgsql #{node['postgis']['template_name']}"
+  only_if "psql -qAt --list | grep '^#{node['postgis']['template_name']}\|'", user: "postgres"
+  action :run
+end
+
 execute "load_postgis_sql" do
   user "postgres"
   command "psql -d #{node['postgis']['template_name']} -f `pg_config --sharedir`/contrib/#{node['postgis']['sql_folder']}/postgis.sql"
